@@ -1,6 +1,11 @@
 import java.util.Date;
 
 
+/**
+ * Enum with genders
+ * UNKNOWN if it is impossible to determine the gender
+ */
+
 enum Genders {
     MALE, FEMALE, UNKNOWN
 }
@@ -10,15 +15,23 @@ public class ConsoleParser {
     private String name;
     private String birthDate;
 
+    /**
+     * Main constructor
+     * @param data - String from user's input which includes full name and birth date
+     */
     ConsoleParser(String data) {
         this.data = data;
         this.parseInputData();
     }
 
+    /**
+     * Creates resulted data
+     * @return changed user's data if or `Incorrect Input`
+     */
     public String getChangedData() {
         if (parseInputData() == 0) {
             int age = determineAge();
-            String name = determineChangedName();
+            String name = changeName();
             Genders gender = determineGender();
             return "Name: " + name + '\n' + "Age: " + age + '\n' + "Gender: " + gender;
         } else {
@@ -26,7 +39,11 @@ public class ConsoleParser {
         }
     }
 
-    public int parseInputData() {
+    /**
+     * Parses user's input and divide it into name and birth date
+     * @return 0 if data is correct, -1 if it is incorrect
+     */
+    private int parseInputData() {
         String[] splitedData = data.split(" ");
         try {
             birthDate = splitedData[splitedData.length - 1];
@@ -43,7 +60,11 @@ public class ConsoleParser {
         return 0;
     }
 
-    public int determineAge() {
+    /**
+     * Calculates age from birth date
+     * @return age or -1 if something went wrong
+     */
+    private int determineAge() {
         try {
             String[] splitedBirthDate = birthDate.split("\\.");
             Integer birthYear = Integer.valueOf(splitedBirthDate[splitedBirthDate.length - 1]);
@@ -60,7 +81,11 @@ public class ConsoleParser {
         }
     }
 
-    public Genders determineGender() {
+    /**
+     * Determines gender from name
+     * @return gender (MALE, FEMALE) or UNKNOWN if was not possible to determine
+     */
+    private Genders determineGender() {
         String[] splitedName = name.split(" ");
         String patronymic = splitedName[splitedName.length - 1];
         if (patronymic.substring(patronymic.length() - 1).equals("ч")) {
@@ -72,7 +97,11 @@ public class ConsoleParser {
         return Genders.UNKNOWN;
     }
 
-    public String determineChangedName() {
+    /**
+     * Changes the name from format: Surname Name Patronymic into Surname N. P.
+     * @return changed name or `None` if something went wrong
+     */
+    private String changeName() {
         String[] splitedName = name.split(" ");
         String[] newName = new String[3];
         newName[0] = splitedName[0];
